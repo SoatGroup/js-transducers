@@ -92,8 +92,6 @@ Si nous représentons chaque étape par un flèche jaune et chaque élément de 
 
 ![Filter Map Reduce créeent des collections temporaires](https://cdn-images-1.medium.com/max/800/1*mJicJiOZT4M9jwv6kMkwRg.gif "Mode de fonctionnement actuel")
 
-![Les Transducers ne créent pas de collections temporaires](https://cdn-images-1.medium.com/max/800/1*rEOyWd0MTPv_NZvzDaFbkA.gif "Notre objectif")
-
 # En route vers les transducers
 
 ## Reduce à la loupe
@@ -229,7 +227,10 @@ it('can be used to compute the same result as before', () => {
 });
 ```
 
-Il est important de noter que nous avons ici résolu notre problème de création de collection temporaire !
+Il est important de noter que nous avons ici résolu notre problème de création de collection temporaire ! Si nous refaisons notre schema d'exécution, nous obtenons :
+
+![Les Transducers ne créent pas de collections temporaires](https://cdn-images-1.medium.com/max/800/1*rEOyWd0MTPv_NZvzDaFbkA.gif "Nouveau mode de fonctionnement")
+
 Ceci étant dit, nous pouvons encore affiner notre implémentation.
 
 ## Curryfication
