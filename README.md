@@ -136,7 +136,7 @@ Nous pouvons alors définir des fonctions de plus haut niveau (higher order func
 ```javascript
 const reducer = (accumulator, element) => accumulator.concat(element);
 
-êconst filterer = (predicate) => {
+const filterer = (predicate) => {
     return (accumulator, element) => predicate(element) ? accumulator.concat(element) : accumulator
 };
 
