@@ -89,9 +89,10 @@ Le paradigme du *reactive programming* est repose sur la capaciter de traîter l
 Or dans notre cas, nous devons attendre que chaque collection temporaire soit fini d'être calculée pour pouvoir passer à l'étape suivante.
 
 Si nous représentons chaque étape par un flèche jaune et chaque élément de notre liste par un trait rouge, nous obtenons un schéma d'execution comme ceci:
-https://cdn-images-1.medium.com/max/800/1*mJicJiOZT4M9jwv6kMkwRg.gif (copyright Roman Liutikov https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624#.6nxos02jh)
 
-https://cdn-images-1.medium.com/max/800/1*rEOyWd0MTPv_NZvzDaFbkA.gif (copyright Roman Liutikov https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624#.6nxos02jh)
+![Filter Map Reduce créeent des collections temporaires](https://cdn-images-1.medium.com/max/800/1*mJicJiOZT4M9jwv6kMkwRg.gif "Mode de fonctionnement actuel")
+
+![Les Transducers ne créent pas de collections temporaires](https://cdn-images-1.medium.com/max/800/1*rEOyWd0MTPv_NZvzDaFbkA.gif "Notre objectif")
 
 # En route vers les transducers
 
@@ -313,3 +314,6 @@ describe('Transducers', () => {
 Les transducers sont une alternative interessante au classique map-reduce qui produit le même résultat tout en étant plus cohérent avec le paradigme du *reactive programming*.
 Le but de l'article était de dé-mystifier le sujet en le ré-implementant. Bien entendu, dans la vie de tous les jours, il est recommandé d'utiliser un librairie déja existante comme [transducers.js](https://github.com/cognitect-labs/transducers-js).
 Enfin, tout comme le pattern *map-reduce*, ce pattern n'est pas exclusif à javascript et peut s'adapter à tous les languages ce qui est démontré par l'existance de beaucoup de libraires sur le sujet.
+
+Note de pied de page :
+Les gifs animés ont été repris de [l'article de Roman Liutikov](https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624#.rty8u5pmt)
