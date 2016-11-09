@@ -1,10 +1,10 @@
 # Les transducers, un map-reduce sans collections temporaires
 
-Le pattern fonctionnel map-reduce est désomais commun. On le retrouve dans tous les languages majeurs (Java, C#, javascript,...). 
+Le pattern fonctionnel map-reduce est désormais commun. On le retrouve dans tous les languages majeurs (Java, C#, javascript,...). 
 
 Dans cet article, nous utiliserons javascript (ES6) pour nos illustrations. L'ensemble du code peut être trouvé [sur le gitlab de soat](http://gitlab.soat.fr/craftsmanship/js-transducers). Après un `npm install`, la commande `npm test` executera les tests.
 
-Nous commencerons par un rappel du pattern map-reduce et regarderons de plus prêt les impactes que cela a sur l'execution de notre code. Puis nous verrons que nous que toutes les fonctions sont exprimables avec `reduce`. Enfin nous exploiterons cela afin d'éviter les collections temporaire.  
+Nous commencerons par un rappel du pattern map-reduce et regarderons de plus près les impacts que cela a sur l'exécution de notre code. Puis nous verrons que toutes les fonctions sont exprimables avec `reduce`. Enfin nous exploiterons cela afin d'éviter les collections temporaires.  
 
 # Map-reduce et sa consommation mémoire
 
@@ -29,7 +29,7 @@ describe('filter', () => {
 });
 ```
 
-où `evenNumbers` est définit ainsi :
+où `evenNumbers` est défini ainsi :
 
 ```javascript
 const evenNumbers = [2, 10, 238];
@@ -47,7 +47,7 @@ describe('map', () => {
 });
 ```
 
-où `numbersTimesTwo` est définit ainsi :
+où `numbersTimesTwo` est défini ainsi :
 
 ```javascript
 const numbersTimesTwo = [2, 4, 20, 46, 476];
@@ -82,11 +82,11 @@ describe('Existing functions :', () => {
 
 ## Gestion mémoire et reactive programming
 
-Dans notre dernier exemple, il est important de noter qu'une nouvelle collection à chaque appel de fonction. Nous créons donc deux collections temporaires.
-La consomation mémoire n'est pas un problème en soit : nos machines actuelles gèrent très bien beaucoup de données et les les variables temporaires.
-Cependant, cela prends une toute autre importance quand nous regardons cela sous le prisme du [*reactive programming*](https://en.wikipedia.org/wiki/Reactive_programming).
-Le paradigme du *reactive programming* est repose sur la capaciter de traîter les données au fur et à mesure de leur disponibilité : c'est la notion de *data flow*.
-Or dans notre cas, nous devons attendre que chaque collection temporaire soit fini d'être calculée pour pouvoir passer à l'étape suivante.
+Dans notre dernier exemple, il est important de noter qu'une nouvelle collection est créée à chaque appel de fonction. Nous créons donc deux collections temporaires.
+La consommation mémoire n'est pas un problème en soit : nos machines actuelles gèrent très bien beaucoup de données et les variables temporaires.
+Cependant, cela prend une toute autre importance quand nous regardons cela sous le prisme du [*reactive programming*](https://en.wikipedia.org/wiki/Reactive_programming).
+Le paradigme du *reactive programming* repose sur la capacité de traîter les données au fur et à mesure de leur disponibilité : c'est la notion de *data flow*.
+Or dans notre cas, nous devons attendre que chaque collection temporaire ait fini d'être calculée pour pouvoir passer à l'étape suivante.
 
 Si nous représentons chaque étape par un flèche jaune et chaque élément de notre liste par un trait rouge, nous obtenons un schéma d'execution comme ceci:
 
@@ -96,7 +96,7 @@ Si nous représentons chaque étape par un flèche jaune et chaque élément de 
 
 ## Reduce à la loupe
 
-`Reduce` à pour but produire un résultat unique à partir d'une collection. Mais cette définition peut être abusé en concidèrant une collection comme étant un résultat à part entière. Ainsi, nous pouvons utiliser réduce pour produire une nouvelle collection :
+`Reduce` a pour but produire un résultat unique à partir d'une collection. Mais cette définition peut être abusée en considérant une collection comme étant un résultat à part entière. Ainsi, nous pouvons utiliser reduce pour produire une nouvelle collection :
 
 ```javascript
 describe('Alternative uses of reduce', () => {
@@ -107,7 +107,7 @@ describe('Alternative uses of reduce', () => {
 });
 ```
 
-Ceci a peut d'intêret dans un premier temps, je vous l'accorde. Mais en utilisant cette propriété, nous nous rendons compte que :
+Ceci a peu d'intérêt dans un premier temps, je vous l'accorde. Mais en utilisant cette propriété, nous nous rendons compte que :
 
  * nous pouvons réécrire la fonction `filter` à partir de `reduce` :
  
@@ -127,7 +127,7 @@ it('can emulates map and transform data', () => {
 });
 ```
 
-Si nous regardons notre implémentation, nous constatons qu'en fonction du cas d'usage de `reduce` la fonction passé en argument aura toujours la même forme.
+Si nous regardons notre implémentation, nous constatons qu'en fonction du cas d'usage de `reduce` la fonction passée en argument aura toujours la même forme.
 
 ## Montons de niveau
 
@@ -145,7 +145,7 @@ const mapper = (transform) => {
 };
 ```
 
-Ainsi, seul l'information du comportement deviens important (comme avec les trois fonctions `filter`,`map`,`reduce`) :
+Ainsi, seule l'information du comportement devient important (comme avec les trois fonctions `filter`,`map`,`reduce`) :
 
 ```javascript
 describe('Reducer', () => {
@@ -168,14 +168,14 @@ describe('Mappers', () => {
 });
 ```
 
-Jusque ici, nous créeons toujours des collections temporaires et avons même réduit (légèrement) la lisibilité du code. Cependant, une nouvelle possibilité s'offre à nous : si nous arrivons à *composer nos fonctions* `reducer`, `filterer` et `mapper`, alors nous n'aurons plus qu'une seule fonction à passer à reduce et éviterons ainsi les collections temporaires.
+Jusqu'ici, nous créeons toujours des collections temporaires et avons même réduit (légèrement) la lisibilité du code. Cependant, une nouvelle possibilité s'offre à nous : si nous arrivons à *composer nos fonctions* `reducer`, `filterer` et `mapper`, alors nous n'aurons plus qu'une seule fonction à passer à reduce et éviterons ainsi les collections temporaires.
 
 # Les transducers
 
 ## Chaîne de responsabilité
 
-En regardant les définitions de nos trois fonctions, nous constatons une dernière répétition : l'appel à `accumulator.concat`. Or ce comportement ne nous interesse réelement que pour la fonction `reducer`.
-Nous pouvons utiliser le pattern de chaîne de responsabilité (à la sauce fonctionnelle) pour éviter cette duplication. Il nous suffit de prendre un paramêtre en plus : la prochaine fonction à appliquer sur l'élément que nous appellerons `nextReducer`.
+En regardant les définitions de nos trois fonctions, nous constatons une dernière répétition : l'appel à `accumulator.concat`. Or ce comportement ne nous interesse réellement que pour la fonction `reducer`.
+Nous pouvons utiliser le pattern de chaîne de responsabilité (à la sauce fonctionnelle) pour éviter cette duplication. Il nous suffit de prendre un paramètre en plus : la prochaine fonction à appliquer sur l'élément que nous appellerons `nextReducer`.
 
 ```javascript
 const reducer = (accumulator, element) => accumulator.concat(element);
@@ -211,7 +211,7 @@ describe('Transducers', () => {
 });
 ```
 
-où `evenNumbersTimesTwo` est définit ainsi :
+où `evenNumbersTimesTwo` est défini ainsi :
 
 ```javascript
 const evenNumbersTimesTwo = [4, 20, 476];
@@ -235,7 +235,7 @@ Ceci étant dit, nous pouvons encore affiner notre implémentation.
 
 ## Curryfication
 
-Nous pouvons aller encore un peu plus loin en modifiant légerement notre dernière étape en faisant de la curryfication :
+Nous pouvons aller encore un peu plus loin en modifiant légèrement notre dernière étape en faisant de la curryfication :
 
 ```javascript
 const reducer = (accumulator, element) => accumulator.concat(element);
@@ -263,12 +263,12 @@ const transducer = filtering((i) => i % 2 == 0)
                                 (reducer));
 ```
 
-Cependant, nous pouvons désormais faire de l'application partiel et stocker chaque étape de l'application dans une varible. Cela s'avèrera utile sous peut.
+Cependant, nous pouvons désormais faire de l'application partiel et stocker chaque étape de l'application dans une varible. Cela s'avèrera utile sous peu.
 
 ## La composition
 
 Afin de pouvoir profiter au mieux de la curryfication, nous avons besoin de pouvoir composer des fonctions. Pour rappel, la composition de fonction consiste à prendre deux fonction `f` et `g` pour en générer une troisiène `h` tel que `h(arguments)=f(g(arguments))`.
-Ce qui s'écris très simplement :
+Ce qui s'écrit très simplement :
 
 ```javascript
 const compose = (f, g) => (i) => f(g(i));
@@ -278,15 +278,15 @@ Cette définition de `compose` est suffisante pour notre article bien que ne pre
 
 ## L'application partielle
 
-Nous pouvons alors utiliser la currification et la composition pour faire de l'application partiel de nos fonctions.
-Si nous reprenons nos deux exemples d'utilisation de transducers, nous constatons tout le transducer répété à l'excetion du dernier argument.
-Nous pouvons éviter cela en créant une nouvelle fonction qui filtre et map mais attends un argument pour savoir comment faire le reduce :
+Nous pouvons alors utiliser la currification et la composition pour faire de l'application partielle de nos fonctions.
+Si nous reprenons nos deux exemples d'utilisation de transducers, nous constatons tout le transducer répété à l'exception du dernier argument.
+Nous pouvons éviter cela en créant une nouvelle fonction qui filtre et map mais attend un argument pour savoir comment faire le reduce :
 
 ```javascript
 const evenAndDouble = compose(filtering((i) => i % 2 == 0), mapping((element) => element * 2));
 ```
 
-Ce qui nous permet de définir deux transducers différent en ne se concentrant que sur leur différence :
+Ce qui nous permet de définir deux transducers différents en ne se concentrant que sur leur différence :
 
 ```javascript
 const transducer = evenAndDouble(reducer);
@@ -312,9 +312,9 @@ describe('Transducers', () => {
 
 # Conclusion
 
-Les transducers sont une alternative interessante au classique map-reduce qui produit le même résultat tout en étant plus cohérent avec le paradigme du *reactive programming*.
+Les transducers sont une alternative intéressante au classique map-reduce qui produit le même résultat tout en étant plus cohérent avec le paradigme du *reactive programming*.
 Le but de l'article était de dé-mystifier le sujet en le ré-implementant. Bien entendu, dans la vie de tous les jours, il est recommandé d'utiliser un librairie déja existante comme [transducers.js](https://github.com/cognitect-labs/transducers-js).
-Enfin, tout comme le pattern *map-reduce*, ce pattern n'est pas exclusif à javascript et peut s'adapter à tous les languages ce qui est démontré par l'existance de beaucoup de libraires sur le sujet.
+Enfin, tout comme le pattern *map-reduce*, ce pattern n'est pas exclusif à javascript et peut s'adapter à tous les languages ce qui est démontré par l'existance de beaucoup de librairies sur le sujet.
 
 Note de pied de page :
 Les gifs animés ont été repris de [l'article de Roman Liutikov](https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624#.rty8u5pmt)
