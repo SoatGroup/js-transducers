@@ -330,3 +330,4 @@ Enfin, tout comme le pattern *map-reduce*, ce pattern n'est pas exclusif à java
 
 Note de pied de page :
 Les gifs animés ont été repris de [l'article de Roman Liutikov](https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624#.rty8u5pmt)
+Cette article fait suite à la session d'[Arnaud](https://twitter.com/Lilobase) sur le sujet lors de [SoCraTes France](http://blog.soat.fr/2016/11/socrates-fr-16-retour-sur-une-non-conference/)
