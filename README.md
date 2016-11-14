@@ -1,13 +1,13 @@
 # Les transducers, un map-reduce sans collections temporaires
 
-Le pattern fonctionnel `map-reduce` est désormais largement répandu dans tous les languages majeurs (Java, C#, javascript,...). 
+Le pattern fonctionnel `map-reduce` est désormais largement répandu dans tous les langages majeurs (Java, C#, javascript,...). 
 
 Nous commencerons par un rappel de ce pattern et regarderons de plus près les impacts de son utilisation sur l'exécution de notre code.
 Puis nous verrons qu'il est possible d'exprimer toutes les fonctions avec `reduce`.
 Enfin nous exploiterons cette possibilité afin d'éviter les collections temporaires.  
 
 Dans cet article, nous utiliserons javascript (ES6) pour nos illustrations et le framework [mocha][https://mochajs.org/] pour écrire nos tests unitaires.
-L'ensemble du code peut être trouvé [sur le gitlab de soat](http://gitlab.soat.fr/craftsmanship/js-transducers).
+L'ensemble du code peut être trouvé [sur notre gitlab](http://gitlab.soat.fr/craftsmanship/js-transducers).
 Après un `npm install`, la commande `npm test` executera les tests.
 
 
@@ -15,7 +15,7 @@ Après un `npm install`, la commande `npm test` executera les tests.
 
 Le pattern map-reduce est un pattern de programmation fonctionnel qui s'applique à des collections pour permettre de les filtrer, de transformer leurs valeurs et d'y appliquer des calculs.
 
-Illustrons ces trois conceptes avec des exemples. Prenons la collection de nombres suivante :
+Illustrons ces trois concepts avec des exemples. Prenons la collection de nombres suivante :
 
 ```javascript
 const numbers = [1, 2, 10, 23, 238];
@@ -89,7 +89,7 @@ Ici, vous l'aurez compris, nous conservons les nombres pairs, les multiplions pa
 
 ## Gestion mémoire et reactive programming
 
-Bien, maintenant que nous sommes à l'aise avec ces conceptes, passons aux choses sérieuses.
+Bien, maintenant que nous sommes à l'aise avec ces concepts, passons aux choses sérieuses!
 
 Dans notre dernier exemple, il est important de noter qu'une nouvelle collection est créée à chaque appel de fonction. Nous créons donc deux collections temporaires.
 La consommation mémoire n'est pas un problème en soit : nos machines actuelles gèrent très bien un important volume de données ainsi que les variables temporaires.
@@ -106,7 +106,7 @@ Si nous représentons chaque étape par un flèche jaune et chaque élément de 
 
 ## Reduce à la loupe
 
-`Reduce` a pour but produire un résultat unique à partir d'une collection. Mais cette définition peut être abusée en considérant une collection comme étant un résultat à part entière. Ainsi, nous pouvons utiliser reduce pour produire une nouvelle collection :
+`Reduce` a pour but produire un résultat unique à partir d'une collection. Mais cette définition peut être abusée en considérant une collection comme étant un résultat à part entière. Ainsi, nous pouvons utiliser `reduce` pour produire une nouvelle collection :
 
 ```javascript
 describe('Alternative uses of reduce', () => {
@@ -155,7 +155,7 @@ const mapper = (transform) => {
 };
 ```
 
-Ainsi, seule l'information du comportement devient important (comme avec les trois fonctions `filter`,`map`,`reduce`) :
+Ainsi, seule l'information du comportement devient importante (comme avec les trois fonctions `filter`,`map`,`reduce`) :
 
 Nous pouvons réécrire nos exemples :
 
@@ -180,7 +180,7 @@ describe('Mappers', () => {
 });
 ```
 
-Jusqu'ici, nous créeons toujours des collections temporaires et avons même réduit (légèrement) la lisibilité du code. Cependant, une nouvelle possibilité s'offre à nous : si nous arrivons à *composer nos fonctions* `reducer`, `filterer` et `mapper`, alors nous n'aurons plus qu'une seule fonction à passer à reduce et éviterons ainsi les collections temporaires.
+Jusqu'ici, nous créeons toujours des collections temporaires et avons même réduit (légèrement) la lisibilité du code. Cependant, une nouvelle possibilité s'offre à nous : si nous arrivons à *composer nos fonctions* `reducer`, `filterer` et `mapper`, alors nous n'aurons plus qu'une seule fonction à passer à `reduce` et éviterons ainsi les collections temporaires.
 
 # Les transducers
 
@@ -239,7 +239,7 @@ it('can be used to compute the same result as before', () => {
 });
 ```
 
-Il est important de noter que nous avons ici résolu notre problème de création de collection temporaire ! Si nous refaisons notre schema d'exécution, nous obtenons :
+Il est important de noter que nous avons ici résolu notre problème de création de collections temporaires ! Si nous refaisons notre schéma d'exécution, nous obtenons :
 
 ![Les Transducers ne créent pas de collections temporaires](https://cdn-images-1.medium.com/max/800/1*rEOyWd0MTPv_NZvzDaFbkA.gif "Nouveau mode de fonctionnement")
 
@@ -267,7 +267,7 @@ const mapping = (transform) => {
 };
 ```
 
-Ceci a pour seul effet direct de changer la syntaxe que nous utilisons pour notre transducer :
+Ceci a pour seul effet direct de changer la syntaxe que nous utilisons pour notre `transducer` :
 
 ```javascript
 const transducer = filtering((i) => i % 2 == 0)
@@ -275,11 +275,11 @@ const transducer = filtering((i) => i % 2 == 0)
                                 (reducer));
 ```
 
-Cependant, nous pouvons désormais faire de l'application partiel et stocker chaque étape de l'application dans une variable. Cela s'avèrera utile sous peu.
+Cependant, nous pouvons désormais faire de l'application partielle et stocker chaque étape de l'application dans une variable. Cela s'avèrera utile sous peu.
 
 ## La composition
 
-Afin de pouvoir profiter au mieux de la curryfication, nous avons besoin de pouvoir composer des fonctions. Pour rappel, la composition de fonction consiste à prendre deux fonction `f` et `g` pour en générer une troisiène `h` tel que `h(arguments)=f(g(arguments))`.
+Afin de pouvoir profiter au mieux de la curryfication, nous avons besoin de pouvoir composer des fonctions. Pour rappel, la composition de fonction consiste à prendre deux fonctions `f` et `g` pour en générer une troisième `h` telle que `h(arguments)=f(g(arguments))`.
 Ce qui s'écrit très simplement :
 
 ```javascript
@@ -291,8 +291,8 @@ Cette définition de `compose` est suffisante pour notre article bien que ne pre
 ## L'application partielle
 
 Nous pouvons alors utiliser la currification et la composition pour faire de l'application partielle de nos fonctions.
-Si nous reprenons nos deux exemples d'utilisation de transducers, nous constatons tout le transducer répété à l'exception du dernier argument.
-Nous pouvons éviter cela en créant une nouvelle fonction qui filtre et map mais attend un argument pour savoir comment faire le reduce :
+Si nous reprenons nos deux exemples d'utilisation de transducers, nous constatons tout même que le transducer est répété à l'exception du dernier argument.
+Nous pouvons éviter cela en créant une nouvelle fonction qui filtre et `map` mais attend un argument pour savoir comment faire le `reduce` :
 
 ```javascript
 const evenAndDouble = compose(filtering((i) => i % 2 == 0), mapping((element) => element * 2));
@@ -330,4 +330,4 @@ Enfin, tout comme le pattern *map-reduce*, ce pattern n'est pas exclusif à java
 
 Note de pied de page :
 Les gifs animés ont été repris de [l'article de Roman Liutikov](https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624#.rty8u5pmt)
-Cette article fait suite à la session d'[Arnaud](https://twitter.com/Lilobase) sur le sujet lors de [SoCraTes France](http://blog.soat.fr/2016/11/socrates-fr-16-retour-sur-une-non-conference/)
+Cet article fait suite à la session d'[Arnaud](https://twitter.com/Lilobase) sur le sujet lors de [SoCraTes France](http://blog.soat.fr/2016/11/socrates-fr-16-retour-sur-une-non-conference/)
