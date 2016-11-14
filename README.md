@@ -1,6 +1,6 @@
 # Les transducers, un map-reduce sans collections temporaires
 
-Le pattern fonctionnel `map-reduce` est désormais largement répandu dans tous les langages majeurs (Java, C#, javascript,...). 
+Le pattern fonctionnel `map-reduce` est désormais largement répandu dans tous les langages majeurs (Java, C#, javascript...). 
 
 Nous commencerons par un rappel de ce pattern et regarderons de plus près les impacts de son utilisation sur l'exécution de notre code.
 Puis nous verrons qu'il est possible d'exprimer toutes les fonctions avec `reduce`.
@@ -13,7 +13,7 @@ Après un `npm install`, la commande `npm test` executera les tests.
 
 # Map-reduce et sa consommation mémoire
 
-Le pattern map-reduce est un pattern de programmation fonctionnel qui s'applique à des collections pour permettre de les filtrer, de transformer leurs valeurs et d'y appliquer des calculs.
+Le pattern map-reduce est un pattern de programmation fonctionnelle qui s'applique à des collections pour permettre de les filtrer, de transformer leurs valeurs et d'y appliquer des calculs.
 
 Illustrons ces trois concepts avec des exemples. Prenons la collection de nombres suivante :
 
@@ -106,7 +106,7 @@ Si nous représentons chaque étape par un flèche jaune et chaque élément de 
 
 ## Reduce à la loupe
 
-`Reduce` a pour but produire un résultat unique à partir d'une collection. Mais cette définition peut être abusée en considérant une collection comme étant un résultat à part entière. Ainsi, nous pouvons utiliser `reduce` pour produire une nouvelle collection :
+`Reduce` a pour but de produire un résultat unique à partir d'une collection. Mais cette définition peut être abusée en considérant une collection comme étant un résultat à part entière. Ainsi, nous pouvons utiliser `reduce` pour produire une nouvelle collection :
 
 ```javascript
 describe('Alternative uses of reduce', () => {
@@ -290,7 +290,7 @@ Cette définition de `compose` est suffisante pour notre article bien que ne pre
 
 ## L'application partielle
 
-Nous pouvons alors utiliser la currification et la composition pour faire de l'application partielle de nos fonctions.
+Nous pouvons alors utiliser la curryfication et la composition pour faire de l'application partielle de nos fonctions.
 Si nous reprenons nos deux exemples d'utilisation de transducers, nous constatons tout même que le transducer est répété à l'exception du dernier argument.
 Nous pouvons éviter cela en créant une nouvelle fonction qui filtre et `map` mais attend un argument pour savoir comment faire le `reduce` :
 
@@ -325,7 +325,7 @@ describe('Transducers', () => {
 # Conclusion
 
 Les transducers sont une alternative intéressante au classique map-reduce qui produit le même résultat tout en étant plus cohérent avec le paradigme du *reactive programming*.
-Le but de l'article était de dé-mystifier le sujet en le ré-implementant. Bien entendu, dans la vie de tous les jours, il est recommandé d'utiliser un librairie déja existante comme [transducers.js](https://github.com/cognitect-labs/transducers-js).
+Le but de l'article était de dé-mystifier le sujet en le ré-implementant. Bien entendu, dans la vie de tous les jours, il est recommandé d'utiliser une librairie déja existante comme [transducers.js](https://github.com/cognitect-labs/transducers-js).
 Enfin, tout comme le pattern *map-reduce*, ce pattern n'est pas exclusif à javascript et peut s'adapter à tous les languages ce qui est démontré par l'existance de beaucoup de librairies sur le sujet.
 
 Note de pied de page :
