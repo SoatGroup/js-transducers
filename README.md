@@ -1,16 +1,21 @@
 # Les transducers, un map-reduce sans collections temporaires
 
-Le pattern fonctionnel map-reduce est désormais commun. On le retrouve dans tous les languages majeurs (Java, C#, javascript,...). 
+Le pattern fonctionnel `map-reduce` est désormais largement répandu dans tous les languages majeurs (Java, C#, javascript,...). 
 
-Dans cet article, nous utiliserons javascript (ES6) pour nos illustrations. L'ensemble du code peut être trouvé [sur le gitlab de soat](http://gitlab.soat.fr/craftsmanship/js-transducers). Après un `npm install`, la commande `npm test` executera les tests.
+Nous commencerons par un rappel de ce pattern et regarderons de plus près les impacts de son utilisation sur l'exécution de notre code.
+Puis nous verrons qu'il est possible d'exprimer toutes les fonctions avec `reduce`.
+Enfin nous exploiterons cette possibilité afin d'éviter les collections temporaires.  
 
-Nous commencerons par un rappel du pattern map-reduce et regarderons de plus près les impacts que cela a sur l'exécution de notre code. Puis nous verrons que toutes les fonctions sont exprimables avec `reduce`. Enfin nous exploiterons cela afin d'éviter les collections temporaires.  
+Dans cet article, nous utiliserons javascript (ES6) pour nos illustrations et le framework [mocha][https://mochajs.org/] pour écrire nos tests unitaires.
+L'ensemble du code peut être trouvé [sur le gitlab de soat](http://gitlab.soat.fr/craftsmanship/js-transducers).
+Après un `npm install`, la commande `npm test` executera les tests.
+
 
 # Map-reduce et sa consommation mémoire
 
-Le pattern map-reduce est un pattern de programmation fonctionnel désormais bien connu. Il s'applique à des collections et permet de les filtrer, transformer leur valeur et faire des calculs dessus.
+Le pattern map-reduce est un pattern de programmation fonctionnel qui s'applique à des collections pour permettre de les filtrer, de transformer leurs valeurs et d'y appliquer des calculs.
 
-Illustrons ça avec un exemple. Prenons une collection de nombres :
+Illustrons ces trois conceptes avec des exemples. Prenons la collection de nombres suivante :
 
 ```javascript
 const numbers = [1, 2, 10, 23, 238];
@@ -37,7 +42,7 @@ const evenNumbers = [2, 10, 238];
 
 ## Map
 
-Nous pouvons transformer ces valeurs en les multipliant par deux :
+Nous pouvons transformer les valeurs de cette collection en les multipliant par deux :
 
 ```javascript
 describe('map', () => {
@@ -80,11 +85,16 @@ describe('Existing functions :', () => {
 });
 ```
 
+Ici, vous l'aurez compris, nous conservons les nombres pairs, les multiplions par deux et faisons la somme de ces derniers.
+
 ## Gestion mémoire et reactive programming
 
+Bien, maintenant que nous sommes à l'aise avec ces conceptes, passons aux choses sérieuses.
+
 Dans notre dernier exemple, il est important de noter qu'une nouvelle collection est créée à chaque appel de fonction. Nous créons donc deux collections temporaires.
-La consommation mémoire n'est pas un problème en soit : nos machines actuelles gèrent très bien beaucoup de données et les variables temporaires.
+La consommation mémoire n'est pas un problème en soit : nos machines actuelles gèrent très bien un important volume de données ainsi que les variables temporaires.
 Cependant, cela prend une toute autre importance quand nous regardons cela sous le prisme du [*reactive programming*](https://en.wikipedia.org/wiki/Reactive_programming).
+
 Le paradigme du *reactive programming* repose sur la capacité de traîter les données au fur et à mesure de leur disponibilité : c'est la notion de *data flow*.
 Or dans notre cas, nous devons attendre que chaque collection temporaire ait fini d'être calculée pour pouvoir passer à l'étape suivante.
 
@@ -146,6 +156,8 @@ const mapper = (transform) => {
 ```
 
 Ainsi, seule l'information du comportement devient important (comme avec les trois fonctions `filter`,`map`,`reduce`) :
+
+Nous pouvons réécrire nos exemples :
 
 ```javascript
 describe('Reducer', () => {
@@ -263,7 +275,7 @@ const transducer = filtering((i) => i % 2 == 0)
                                 (reducer));
 ```
 
-Cependant, nous pouvons désormais faire de l'application partiel et stocker chaque étape de l'application dans une varible. Cela s'avèrera utile sous peu.
+Cependant, nous pouvons désormais faire de l'application partiel et stocker chaque étape de l'application dans une variable. Cela s'avèrera utile sous peu.
 
 ## La composition
 
