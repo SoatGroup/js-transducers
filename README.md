@@ -193,9 +193,7 @@ Nous pouvons utiliser le pattern de chaîne de responsabilité (à la sauce fonc
 const reducer = (accumulator, element) => accumulator.concat(element);
 
 const filtering = (predicate, nextReducer) => {
-    return (accumulator, element) => {
-        return predicate(element) ? nextReducer(accumulator, element) : accumulator
-    };
+    return (accumulator, element) => predicate(element) ? nextReducer(accumulator, element) : accumulator;
 };
 
 const mapping = (transform, nextReducer) => {
@@ -253,17 +251,11 @@ Nous pouvons aller encore un peu plus loin en modifiant légèrement notre derni
 const reducer = (accumulator, element) => accumulator.concat(element);
 
 const filtering = (predicate) => {
-    return (nextReducer) => {
-        return (accumulator, element) => {
-            return predicate(element) ? nextReducer(accumulator, element) : accumulator
-        };
-    }
+    return (nextReducer) => (accumulator, element) => predicate(element) ? nextReducer(accumulator, element) : accumulator;
 };
 
 const mapping = (transform) => {
-    return (nextReducer) => {
-        return (accumulator, element) => nextReducer(accumulator, transform(element));
-    }
+    return (nextReducer) => (accumulator, element) => nextReducer(accumulator, transform(element));
 };
 ```
 
@@ -283,7 +275,9 @@ Afin de pouvoir profiter au mieux de la curryfication, nous avons besoin de pouv
 Ce qui s'écrit très simplement :
 
 ```javascript
-const compose = (f, g) => (i) => f(g(i));
+const compose = (f, g) => {
+    return (i) => f(g(i));
+};
 ```
 
 Cette définition de `compose` est suffisante pour notre article bien que ne prenant que deux arguments. Nous laissons cette généralisation comme exercice au lecteur (et dans le repository gitlab ;) ).
@@ -328,6 +322,6 @@ Les transducers sont une alternative intéressante au classique map-reduce qui p
 Le but de l'article était de dé-mystifier le sujet en le ré-implementant. Bien entendu, dans la vie de tous les jours, il est recommandé d'utiliser une librairie déja existante comme [transducers.js](https://github.com/cognitect-labs/transducers-js).
 Enfin, tout comme le pattern *map-reduce*, ce pattern n'est pas exclusif à javascript et peut s'adapter à tous les languages ce qui est démontré par l'existance de beaucoup de librairies sur le sujet.
 
-Note de pied de page :
+---
 Les gifs animés ont été repris de [l'article de Roman Liutikov](https://medium.com/@roman01la/understanding-transducers-in-javascript-3500d3bd9624#.rty8u5pmt)
 Cet article fait suite à la session d'[Arnaud](https://twitter.com/Lilobase) sur le sujet lors de [SoCraTes France](http://blog.soat.fr/2016/11/socrates-fr-16-retour-sur-une-non-conference/)

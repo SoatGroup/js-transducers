@@ -83,9 +83,7 @@ describe('Transducers', () => {
         const reducer = (accumulator, element) => accumulator.concat(element);
 
         const filtering = (predicate, nextReducer) => {
-            return (accumulator, element) => {
-                return predicate(element) ? nextReducer(accumulator, element) : accumulator
-            };
+            return (accumulator, element) => predicate(element) ? nextReducer(accumulator, element) : accumulator;
         };
         const mapping = (transform, nextReducer) => {
             return (accumulator, element) => nextReducer(accumulator, transform(element));
@@ -110,16 +108,11 @@ describe('Transducers', () => {
         const reducer = (accumulator, element) => accumulator.concat(element);
 
         const filtering = (predicate) => {
-            return (nextReducer) => {
-                return (accumulator, element) => {
-                    return predicate(element) ? nextReducer(accumulator, element) : accumulator
-                };
-            }
+            return (nextReducer) => (accumulator, element) => predicate(element) ? nextReducer(accumulator, element) : accumulator;
         };
+
         const mapping = (transform) => {
-            return (nextReducer) => {
-                return (accumulator, element) => nextReducer(accumulator, transform(element));
-            }
+            return (nextReducer) => (accumulator, element) => nextReducer(accumulator, transform(element));
         };
 
         const compose = (fn, ...fns) => (i) => {
