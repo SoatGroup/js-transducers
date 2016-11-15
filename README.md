@@ -285,7 +285,7 @@ Cette définition de `compose` est suffisante pour notre article bien que ne pre
 ## L'application partielle
 
 Nous pouvons alors utiliser la curryfication et la composition pour faire de l'application partielle de nos fonctions.
-Si nous reprenons nos deux exemples d'utilisation de transducers, nous constatons tout même que le transducer est répété à l'exception du dernier argument.
+Si nous reprenons nos deux exemples d'utilisation de transducers, nous constatons que tout le transducer est répété à l'exception du dernier argument.
 Nous pouvons éviter cela en créant une nouvelle fonction qui filtre et `map` mais attend un argument pour savoir comment faire le `reduce` :
 
 ```javascript
