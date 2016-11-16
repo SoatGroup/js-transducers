@@ -7,7 +7,7 @@ Puis nous verrons qu'il est possible d'exprimer toutes les fonctions avec `reduc
 Enfin nous exploiterons cette possibilité afin d'éviter les collections temporaires.  
 
 Dans cet article, nous utiliserons javascript (ES6) pour nos illustrations et le framework [mocha][https://mochajs.org/] pour écrire nos tests unitaires.
-L'ensemble du code peut être trouvé [sur notre gitlab](http://gitlab.soat.fr/craftsmanship/js-transducers).
+L'ensemble du code peut être trouvé [sur notre github](https://github.com/SoatGroup/js-transducers).
 Après un `npm install`, la commande `npm test` executera les tests.
 
 
@@ -280,7 +280,7 @@ const compose = (f, g) => {
 };
 ```
 
-Cette définition de `compose` est suffisante pour notre article bien que ne prenant que deux arguments. Nous laissons cette généralisation comme exercice au lecteur (et dans le repository gitlab ;) ).
+Cette définition de `compose` est suffisante pour notre article bien que ne prenant que deux arguments. Nous laissons cette généralisation comme exercice au lecteur (et dans le repository github ;) ).
 
 ## L'application partielle
 
